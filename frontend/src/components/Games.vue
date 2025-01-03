@@ -4,6 +4,8 @@ import { ref, reactive, onMounted } from 'vue'
 
 const games = ref([])
 const open = ref(false)
+const message = ref('')
+const showMessage = ref(false)
 
 const showModal = () => {
   open.value = true
@@ -45,11 +47,21 @@ const addGame = async () => {
     const path = 'http://localhost:8000/games'
     const res = await axios.post(path, addGameForm)
     console.log(res.data)
+    showAlert('Game Added!')
   } catch (error) {
     console.error(error)
   } finally {
     await getGames()
   }
+}
+
+const showAlert = (msg) => {
+  message.value = msg
+  showMessage.value = true
+}
+
+const hideAlert = () => {
+  showMessage.value = false
 }
 
 const initForm = () => {
@@ -82,6 +94,14 @@ onMounted(() => {
           <br />
 
           <!-- Alert Message -->
+          <a-alert
+            v-if="showMessage"
+            :message="message"
+            type="warning"
+            closable
+            @close="hideAlert"
+          />
+
           <button type="button" class="btn btn-success btn-sm" @click="showModal">Add Game</button>
           <br /><br />
           <table class="table table-hover">
