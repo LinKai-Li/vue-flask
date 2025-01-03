@@ -1,4 +1,23 @@
-<script setup></script>
+<script setup>
+import axios from 'axios'
+import { ref, onMounted } from 'vue'
+
+const games = ref([])
+
+const getGames = async () => {
+  try {
+    const path = 'http://localhost:8000/games'
+    const res = await axios.get(path)
+    games.value = res.data.games
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+onMounted(() => {
+  getGames()
+})
+</script>
 
 <template>
   <div class="jumbotron vertical-center">
@@ -31,10 +50,13 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>DO</td>
-                <td>RE</td>
-                <td>MI</td>
+              <tr v-for="(game, index) in games" :key="index">
+                <td>{{ game.title }}</td>
+                <td>{{ game.genre }}</td>
+                <td>
+                  <span v-if="game.played">Yes</span>
+                  <span v-else>No</span>
+                </td>
                 <td>
                   <div class="btn-group" role="group">
                     <button type="button" class="btn btn-info btn-sm">Update</button>
