@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_cors import CORS
 
 app = Flask(__name__)
@@ -45,12 +45,20 @@ GAMES = [
 ]
 
 # The GET route handler
-@app.route('/games', methods=['GET'])
+@app.route('/games', methods=['GET', 'POST'])
 def all_games():
-    return jsonify({
-        'games': GAMES,
-        'status': 'success'
-    })
+    response_object = {'status': 'success'}
+    if request.method == 'POST':
+        post_data = request.get_json()
+        GAMES.append({
+            'title': post_data.get('title'),
+            'genre': post_data.get('genre'),
+            'played': post_data.get('played')
+        })
+        response_object['message'] = 'Game Added!'
+    else:
+        response_object['games'] = GAMES
+    return jsonify(response_object)
 
 if __name__ == '__main__':
     app.run(debug=True, port=8000)
