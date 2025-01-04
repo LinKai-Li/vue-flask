@@ -1,24 +1,34 @@
 <script setup>
 import axios from 'axios'
-import { ref, reactive, onMounted } from 'vue'
+import { ref, onMounted, reactive } from 'vue'
 import Table from './Table.vue'
 import NewModal from './NewModal.vue'
+import EditModal from './EditModal.vue'
 
 const games = ref([])
 const openAdd = ref(false)
+const openUpdate = ref(false)
 const message = ref('')
 const showMessage = ref(false)
 
-const showAddModal = () => {
-  openAdd.value = true
-}
-
-const editForm = reactive({
+const formData = reactive({
   id: '',
   title: '',
   genre: '',
   played: false,
 })
+
+const showAddModal = () => {
+  openAdd.value = true
+}
+
+const showEditModal = (game) => {
+  openUpdate.value = true
+  formData.id = game.id
+  formData.title = game.title
+  formData.genre = game.genre
+  formData.played = game.played
+}
 
 // GET function
 const getGames = async () => {
@@ -38,6 +48,20 @@ const addGame = async (addGameForm) => {
     const res = await axios.post(path, addGameForm)
     console.log(res.data)
     showAlert('Game Added!')
+  } catch (error) {
+    console.error(error)
+  } finally {
+    await getGames()
+  }
+}
+
+// PUT function
+const updateGame = async (editGameForm) => {
+  try {
+    const path = `http://localhost:8000/games/${editGameForm.id}`
+    const res = await axios.put(path, editGameForm)
+    console.log(res.data)
+    showAlert('Game Updated!')
   } catch (error) {
     console.error(error)
   } finally {
@@ -90,7 +114,7 @@ onMounted(() => {
             Add Game
           </button>
           <br /><br />
-          <Table :games="games" />
+          <Table :games="games" @show-edit-modal="showEditModal" />
           <footer class="bg-primary text-white text-center" style="border-radius: 10px">
             Copyright &copy;. All Rights Reserved 2021
           </footer>
@@ -100,35 +124,7 @@ onMounted(() => {
       <NewModal v-model="openAdd" @add-game="addGame" />
 
       <!-- Second Modal -->
-      <!-- <a-modal
-        v-model:open="open"
-        title="Edit game"
-        okText="Update"
-        @cancel="handleResetUpdate"
-        @ok="handleOkUpdate"
-      >
-        <a-form layout="vertical" :model="editForm" autocomplete="off">
-          <a-form-item
-            label="Title"
-            name="title"
-            :rules="[{ required: true, message: 'Please input your title!' }]"
-          >
-            <a-input v-model:value="editForm.title" placeholder="Enter Game" />
-          </a-form-item>
-
-          <a-form-item
-            label="Genre"
-            name="genre"
-            :rules="[{ required: true, message: 'Please input your genre!' }]"
-          >
-            <a-input v-model:value="editForm.genre" placeholder="Enter Genre" />
-          </a-form-item>
-
-          <a-form-item name="remember">
-            <a-checkbox v-model:checked="editForm.played">Played?</a-checkbox>
-          </a-form-item>
-        </a-form>
-      </a-modal> -->
+      <EditModal v-model="openUpdate" :form-data="formData" @update-game="updateGame" />
     </div>
   </div>
 </template>

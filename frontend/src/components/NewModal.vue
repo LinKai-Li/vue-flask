@@ -22,7 +22,6 @@ const handleOk = (e) => {
   e.preventDefault()
   emit('update:modelValue', false)
   emit('addGame', addGameForm)
-  // addGame()
   initForm()
 }
 
@@ -48,7 +47,7 @@ const handleReset = (e) => {
         name="title"
         :rules="[{ required: true, message: 'Please input your title!' }]"
       >
-        <a-input v-model:value="addGameForm.title" placeholder="Enter Game" />
+        <a-input v-model:value="addGameForm.title" placeholder="Enter Title" />
       </a-form-item>
 
       <a-form-item
