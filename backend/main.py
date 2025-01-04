@@ -81,6 +81,9 @@ def single_game(game_id):
             'played': post_data.get('played')
         })
         response_object['message'] = 'Game Updated!'
+    if request.method == "DELETE":
+        remove_game(game_id)
+        response_object['message'] = 'Game removed!'   
     return jsonify(response_object)
 
 # Removing the game to update

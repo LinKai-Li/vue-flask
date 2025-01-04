@@ -69,6 +69,20 @@ const updateGame = async (editGameForm) => {
   }
 }
 
+// DELETE function
+const deleteGame = async (game) => {
+  try {
+    const path = `http://localhost:8000/games/${game.id}`
+    const res = await axios.delete(path)
+    console.log(res.data)
+    showAlert('Game Deleted!')
+  } catch (error) {
+    console.error(error)
+  } finally {
+    await getGames()
+  }
+}
+
 const showAlert = (msg) => {
   message.value = msg
   showMessage.value = true
@@ -114,7 +128,7 @@ onMounted(() => {
             Add Game
           </button>
           <br /><br />
-          <Table :games="games" @show-edit-modal="showEditModal" />
+          <Table :games="games" @show-edit-modal="showEditModal" @delete-game="deleteGame" />
           <footer class="bg-primary text-white text-center" style="border-radius: 10px">
             Copyright &copy;. All Rights Reserved 2021
           </footer>
