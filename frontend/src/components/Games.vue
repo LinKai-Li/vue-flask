@@ -1,30 +1,20 @@
 <script setup>
 import axios from 'axios'
 import { ref, reactive, onMounted } from 'vue'
+import Table from './Table.vue'
+import NewModal from './NewModal.vue'
 
 const games = ref([])
-const open = ref(false)
+const openAdd = ref(false)
 const message = ref('')
 const showMessage = ref(false)
 
-const showModal = () => {
-  open.value = true
+const showAddModal = () => {
+  openAdd.value = true
 }
 
-const handleOk = (e) => {
-  e.preventDefault()
-  open.value = false
-  addGame()
-  initForm()
-}
-
-const handleReset = (e) => {
-  e.preventDefault()
-  open.value = false
-  initForm()
-}
-
-const addGameForm = reactive({
+const editForm = reactive({
+  id: '',
   title: '',
   genre: '',
   played: false,
@@ -42,7 +32,7 @@ const getGames = async () => {
 }
 
 // POST function
-const addGame = async () => {
+const addGame = async (addGameForm) => {
   try {
     const path = 'http://localhost:8000/games'
     const res = await axios.post(path, addGameForm)
@@ -62,12 +52,6 @@ const showAlert = (msg) => {
 
 const hideAlert = () => {
   showMessage.value = false
-}
-
-const initForm = () => {
-  addGameForm.title = ''
-  addGameForm.genre = ''
-  addGameForm.played = false
 }
 
 onMounted(() => {
@@ -102,57 +86,34 @@ onMounted(() => {
             @close="hideAlert"
           />
 
-          <button type="button" class="btn btn-success btn-sm" @click="showModal">Add Game</button>
+          <button type="button" class="btn btn-success btn-sm" @click="showAddModal">
+            Add Game
+          </button>
           <br /><br />
-          <table class="table table-hover">
-            <!-- Table Head -->
-            <thead>
-              <tr>
-                <!-- Table header cells -->
-                <th scope="col">Title</th>
-                <th scope="col">Genre</th>
-                <th scope="col">Played?</th>
-                <th scope="col">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="(game, index) in games" :key="index">
-                <td>{{ game.title }}</td>
-                <td>{{ game.genre }}</td>
-                <td>
-                  <span v-if="game.played">Yes</span>
-                  <span v-else>No</span>
-                </td>
-                <td>
-                  <div class="btn-group" role="group">
-                    <button type="button" class="btn btn-info btn-sm">Update</button>
-                    <button type="button" class="btn btn-danger btn-sm">Delete</button>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+          <Table :games="games" />
           <footer class="bg-primary text-white text-center" style="border-radius: 10px">
             Copyright &copy;. All Rights Reserved 2021
           </footer>
         </div>
       </div>
       <!-- First Modal -->
-      <a-modal
+      <NewModal v-model="openAdd" @add-game="addGame" />
+
+      <!-- Second Modal -->
+      <!-- <a-modal
         v-model:open="open"
-        title="Add a new game"
+        title="Edit game"
         okText="Update"
-        cancelText="Reset"
-        @cancel="handleReset"
-        @ok="handleOk"
+        @cancel="handleResetUpdate"
+        @ok="handleOkUpdate"
       >
-        <a-form layout="vertical" :model="addGameForm" autocomplete="off">
+        <a-form layout="vertical" :model="editForm" autocomplete="off">
           <a-form-item
             label="Title"
             name="title"
             :rules="[{ required: true, message: 'Please input your title!' }]"
           >
-            <a-input v-model:value="addGameForm.title" placeholder="Enter Game" />
+            <a-input v-model:value="editForm.title" placeholder="Enter Game" />
           </a-form-item>
 
           <a-form-item
@@ -160,14 +121,14 @@ onMounted(() => {
             name="genre"
             :rules="[{ required: true, message: 'Please input your genre!' }]"
           >
-            <a-input v-model:value="addGameForm.genre" placeholder="Enter Genre" />
+            <a-input v-model:value="editForm.genre" placeholder="Enter Genre" />
           </a-form-item>
 
           <a-form-item name="remember">
-            <a-checkbox v-model:checked="addGameForm.played">Played?</a-checkbox>
+            <a-checkbox v-model:checked="editForm.played">Played?</a-checkbox>
           </a-form-item>
         </a-form>
-      </a-modal>
+      </a-modal> -->
     </div>
   </div>
 </template>
