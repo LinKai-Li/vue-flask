@@ -56,7 +56,7 @@ const actions = {
 
 const mutations = {
   setGames: (state, games) => (state.games = games),
-  newGame: (state, game) => state.games.unshift(game),
+  newGame: (state, game) => state.games.push(game),
   removeGame: (state, id) =>
     (state.games = state.games.filter((game) => game.id !== id)),
   updateGame: (state, updGame) => {
@@ -72,6 +72,7 @@ const mutations = {
       state.showMessage = false;
     }, 3000);
   },
+  hideAlert: (state) => (state.showMessage = false),
 };
 
 export default {

@@ -1,15 +1,29 @@
 <script setup>
-import axios from "axios";
-import { ref, onMounted, reactive } from "vue";
+import { ref, onMounted, reactive, computed } from "vue";
 import Table from "./Table.vue";
 import NewModal from "./NewModal.vue";
 import EditModal from "./EditModal.vue";
+import { useStore } from "vuex";
 
-const games = ref([]);
+const store = useStore();
+
+const message = computed(() => store.state.games.message);
+const showMessage = computed(() => store.state.games.showMessage);
+
+const addGame = (addGameForm) => {
+  store.dispatch("addGame", addGameForm);
+};
+
+const updateGame = (editGameForm) => {
+  store.dispatch("updateGame", editGameForm);
+};
+
+const deleteGame = (game) => {
+  store.dispatch("deleteGame", game.id);
+};
+
 const openAdd = ref(false);
 const openUpdate = ref(false);
-const message = ref("");
-const showMessage = ref(false);
 
 const formData = reactive({
   id: "",
@@ -30,70 +44,12 @@ const showEditModal = (game) => {
   formData.played = game.played;
 };
 
-// GET function
-const getGames = async () => {
-  try {
-    const path = "http://localhost:8000/games";
-    const res = await axios.get(path);
-    games.value = res.data.games;
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-// POST function
-const addGame = async (addGameForm) => {
-  try {
-    const path = "http://localhost:8000/games";
-    const res = await axios.post(path, addGameForm);
-    console.log(res.data);
-    showAlert("Game Added!");
-  } catch (error) {
-    console.error(error);
-  } finally {
-    await getGames();
-  }
-};
-
-// PUT function
-const updateGame = async (editGameForm) => {
-  try {
-    const path = `http://localhost:8000/games/${editGameForm.id}`;
-    const res = await axios.put(path, editGameForm);
-    console.log(res.data);
-    showAlert("Game Updated!");
-  } catch (error) {
-    console.error(error);
-  } finally {
-    await getGames();
-  }
-};
-
-// DELETE function
-const deleteGame = async (game) => {
-  try {
-    const path = `http://localhost:8000/games/${game.id}`;
-    const res = await axios.delete(path);
-    console.log(res.data);
-    showAlert("Game Deleted!");
-  } catch (error) {
-    console.error(error);
-  } finally {
-    await getGames();
-  }
-};
-
-const showAlert = (msg) => {
-  message.value = msg;
-  showMessage.value = true;
-};
-
 const hideAlert = () => {
-  showMessage.value = false;
+  store.dispatch("hideAlert");
 };
 
 onMounted(() => {
-  getGames();
+  store.dispatch("getGames");
 });
 </script>
 
@@ -135,11 +91,7 @@ onMounted(() => {
             Add Game
           </button>
           <br /><br />
-          <Table
-            :games="games"
-            @show-edit-modal="showEditModal"
-            @delete-game="deleteGame"
-          />
+          <Table @show-edit-modal="showEditModal" @delete-game="deleteGame" />
           <footer
             class="bg-primary text-white text-center"
             style="border-radius: 10px"

@@ -1,7 +1,10 @@
 <script setup>
-defineProps({
-  games: Array,
-});
+import { computed } from "vue";
+import { useStore } from "vuex";
+
+const store = useStore();
+
+const games = computed(() => store.getters.allGames);
 
 const emit = defineEmits(["showEditModal", "deleteGame"]);
 </script>
