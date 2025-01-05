@@ -1,23 +1,23 @@
 <script setup>
-import { ref, onMounted } from 'vue'
-import axios from 'axios'
+import { ref, onMounted } from "vue";
+import axios from "axios";
 
-const msg = ref('')
+const msg = ref("");
 
 const getResponse = async () => {
   try {
-    const path = 'http://localhost:8000/shark'
-    const res = await axios.get(path)
-    console.log(res.data)
-    msg.value = res.data
+    const path = "http://localhost:8000/shark";
+    const res = await axios.get(path);
+    console.log(res.data);
+    msg.value = res.data;
   } catch (error) {
-    console.error(error)
+    console.error(error);
   }
-}
+};
 
 onMounted(() => {
-  getResponse()
-})
+  getResponse();
+});
 </script>
 
 <template>

@@ -1,9 +1,9 @@
 <script setup>
 defineProps({
   games: Array,
-})
+});
 
-const emit = defineEmits(['showEditModal', 'deleteGame'])
+const emit = defineEmits(["showEditModal", "deleteGame"]);
 </script>
 
 <template>
@@ -28,10 +28,18 @@ const emit = defineEmits(['showEditModal', 'deleteGame'])
         </td>
         <td>
           <div class="btn-group" role="group">
-            <button type="button" class="btn btn-info btn-sm" @click="emit('showEditModal', game)">
+            <button
+              type="button"
+              class="btn btn-info btn-sm"
+              @click="emit('showEditModal', game)"
+            >
               Update
             </button>
-            <button type="button" class="btn btn-danger btn-sm" @click="emit('deleteGame', game)">
+            <button
+              type="button"
+              class="btn btn-danger btn-sm"
+              @click="emit('deleteGame', game)"
+            >
               Delete
             </button>
           </div>

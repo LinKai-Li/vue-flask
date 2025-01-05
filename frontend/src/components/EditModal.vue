@@ -1,32 +1,32 @@
 <script setup>
-import { defineProps, defineEmits, watch, reactive } from 'vue'
+import { defineProps, defineEmits, watch, reactive } from "vue";
 const props = defineProps({
   modelValue: Boolean,
   formData: Object,
-})
+});
 
-const emit = defineEmits(['update:modelValue', 'updateGame'])
+const emit = defineEmits(["update:modelValue", "updateGame"]);
 
-const editGameForm = reactive({ ...props.formData })
+const editGameForm = reactive({ ...props.formData });
 
 watch(
   () => props.formData,
   (newFormData) => {
-    Object.assign(editGameForm, newFormData)
+    Object.assign(editGameForm, newFormData);
   },
   { deep: true, immediate: true },
-)
+);
 
 const handleOk = (e) => {
-  e.preventDefault()
-  emit('update:modelValue', false)
-  emit('updateGame', editGameForm)
-}
+  e.preventDefault();
+  emit("update:modelValue", false);
+  emit("updateGame", editGameForm);
+};
 
 const handleReset = (e) => {
-  e.preventDefault()
-  emit('update:modelValue', false)
-}
+  e.preventDefault();
+  emit("update:modelValue", false);
+};
 </script>
 
 <template>

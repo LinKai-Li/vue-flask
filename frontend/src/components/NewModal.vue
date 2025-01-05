@@ -1,35 +1,35 @@
 <script setup>
-import { ref, defineProps, defineEmits, reactive } from 'vue'
+import { ref, defineProps, defineEmits, reactive } from "vue";
 defineProps({
   modelValue: Boolean,
-})
+});
 
-const emit = defineEmits(['update:modelValue', 'addGame'])
+const emit = defineEmits(["update:modelValue", "addGame"]);
 
 const addGameForm = reactive({
-  title: '',
-  genre: '',
+  title: "",
+  genre: "",
   played: false,
-})
+});
 
 const initForm = () => {
-  addGameForm.title = ''
-  addGameForm.genre = ''
-  addGameForm.played = false
-}
+  addGameForm.title = "";
+  addGameForm.genre = "";
+  addGameForm.played = false;
+};
 
 const handleOk = (e) => {
-  e.preventDefault()
-  emit('update:modelValue', false)
-  emit('addGame', addGameForm)
-  initForm()
-}
+  e.preventDefault();
+  emit("update:modelValue", false);
+  emit("addGame", addGameForm);
+  initForm();
+};
 
 const handleReset = (e) => {
-  e.preventDefault()
-  emit('update:modelValue', false)
-  initForm()
-}
+  e.preventDefault();
+  emit("update:modelValue", false);
+  initForm();
+};
 </script>
 
 <template>
