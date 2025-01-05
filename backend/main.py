@@ -56,12 +56,14 @@ def all_games():
     response_object = {'status': 'success'}
     if request.method == 'POST':
         post_data = request.get_json()
-        GAMES.append({
+        add_game = {
             'id': uuid.uuid4().hex,
             'title': post_data.get('title'),
             'genre': post_data.get('genre'),
             'played': post_data.get('played')
-        })
+        }
+        GAMES.append(add_game)
+        response_object['game'] = add_game
         response_object['message'] = 'Game Added!'
     else:
         response_object['games'] = GAMES
@@ -73,13 +75,11 @@ def single_game(game_id):
     response_object = {'status': 'success'}
     if request.method == "PUT":
         post_data = request.get_json()
-        remove_game(game_id)
-        GAMES.append({
-            'id': uuid.uuid4().hex,
-            'title': post_data.get('title'),
-            'genre': post_data.get('genre'),
-            'played': post_data.get('played')
-        })
+        game = next((game for game in GAMES if game['id'] == game_id), None)
+        game['title'] = post_data.get('title')
+        game['genre'] = post_data.get('genre')
+        game['played'] = post_data.get('played')
+        response_object['game'] = game
         response_object['message'] = 'Game Updated!'
     if request.method == "DELETE":
         remove_game(game_id)
