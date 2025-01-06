@@ -38,6 +38,7 @@ onMounted(() => {
             </p>
           </div>
           <div class="flex justify-end gap-3">
+            <fwb-button @click="showAddModal">Add Game</fwb-button>
             <fwb-button
               gradient="teal-lime"
               outline
@@ -45,7 +46,6 @@ onMounted(() => {
             >
               Statistic
             </fwb-button>
-            <fwb-button @click="showAddModal">Add Game</fwb-button>
           </div>
         </div>
       </div>
