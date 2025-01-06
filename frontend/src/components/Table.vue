@@ -1,6 +1,16 @@
 <script setup>
 import { computed, ref, reactive } from "vue";
 import { useStore } from "vuex";
+import {
+  FwbA,
+  FwbTable,
+  FwbTableBody,
+  FwbTableCell,
+  FwbTableHead,
+  FwbTableHeadCell,
+  FwbTableRow,
+  FwbButton,
+} from "flowbite-vue";
 
 const store = useStore();
 const games = computed(() => store.getters.allGames);
@@ -40,46 +50,36 @@ const handleReset = (e) => {
 </script>
 
 <template>
-  <table class="table table-hover">
-    <!-- Table Head -->
-    <thead>
-      <tr>
-        <!-- Table header cells -->
-        <th scope="col">Title</th>
-        <th scope="col">Genre</th>
-        <th scope="col">Played?</th>
-        <th scope="col">Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr v-for="(game, index) in games" :key="index">
-        <td>{{ game.title }}</td>
-        <td>{{ game.genre }}</td>
-        <td>
-          <span v-if="game.played">Yes</span>
-          <span v-else>No</span>
-        </td>
-        <td>
-          <div class="btn-group" role="group">
-            <button
-              type="button"
-              class="btn btn-info btn-sm"
-              @click="showEditModal(game)"
+  <fwb-table hoverable>
+    <fwb-table-head>
+      <fwb-table-head-cell>Title</fwb-table-head-cell>
+      <fwb-table-head-cell>Genre</fwb-table-head-cell>
+      <fwb-table-head-cell>Played</fwb-table-head-cell>
+      <fwb-table-head-cell>
+        <span class="sr-only">Edit</span>
+      </fwb-table-head-cell>
+    </fwb-table-head>
+    <fwb-table-body>
+      <fwb-table-row v-for="(game, index) in games" :key="index">
+        <fwb-table-cell>{{ game.title }}</fwb-table-cell>
+        <fwb-table-cell>{{ game.genre }}</fwb-table-cell>
+        <fwb-table-cell
+          ><span v-if="game.played">Yes</span>
+          <span v-else>No</span></fwb-table-cell
+        >
+        <fwb-table-cell>
+          <div class="flex justify-end gap-2">
+            <fwb-button size="xs" pill @click="showEditModal(game)"
+              >Edit</fwb-button
             >
-              Update
-            </button>
-            <button
-              type="button"
-              class="btn btn-danger btn-sm"
-              @click="deleteGame(game)"
+            <fwb-button size="xs" color="red" pill @click="deleteGame(game)"
+              >Delete</fwb-button
             >
-              Delete
-            </button>
           </div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+        </fwb-table-cell>
+      </fwb-table-row>
+    </fwb-table-body>
+  </fwb-table>
 
   <a-modal
     v-model:open="open"
