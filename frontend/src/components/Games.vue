@@ -27,17 +27,10 @@ onMounted(() => {
 <template>
   <div class="jumbotron vertical-center">
     <div class="container">
-      <!-- bootswatch CDN -->
-      <link
-        rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/sketchy/bootstrap.min.css"
-        integrity="sha384-RxqHG2ilm4r6aFRpGmBbGTjsqwfqHOKy1ArsMhHusnRO47jcGqpIQqlQK/kmGy9R"
-        crossorigin="anonymous"
-      />
       <div class="row">
         <div class="col-sm-12">
           <h1
-            class="text-center bg-primary text-white"
+            class="bg-primary text-center text-white"
             style="border-radius: 10px"
           >
             Games Library🕹️
@@ -64,7 +57,7 @@ onMounted(() => {
           <br /><br />
           <Table />
           <footer
-            class="bg-primary text-white text-center"
+            class="bg-primary text-center text-white"
             style="border-radius: 10px"
           >
             Copyright &copy;. All Rights Reserved 2025
