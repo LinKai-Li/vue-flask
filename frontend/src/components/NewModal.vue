@@ -2,7 +2,14 @@
 import { defineProps, defineEmits, reactive } from "vue";
 import { useStore } from "vuex";
 import { useToast } from "vue-toastification";
-import { FwbButton, FwbModal, FwbInput, FwbCheckbox } from "flowbite-vue";
+import { options } from "@/constant/options";
+import {
+  FwbButton,
+  FwbModal,
+  FwbInput,
+  FwbCheckbox,
+  FwbSelect,
+} from "flowbite-vue";
 defineProps({
   modelValue: Boolean,
 });
@@ -53,9 +60,9 @@ const closeModal = () => {
           placeholder="Enter Title"
           label="Title"
         />
-        <fwb-input
+        <fwb-select
           v-model="addGameForm.genre"
-          placeholder="Enter Genre"
+          :options="options"
           label="Genre"
         />
         <fwb-checkbox v-model="addGameForm.played" label="Played?" />

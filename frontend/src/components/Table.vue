@@ -1,6 +1,7 @@
 <script setup>
 import { computed, ref, reactive } from "vue";
 import { useStore } from "vuex";
+import { options } from "@/constant/options";
 import {
   FwbTable,
   FwbTableBody,
@@ -12,6 +13,7 @@ import {
   FwbModal,
   FwbInput,
   FwbCheckbox,
+  FwbSelect,
 } from "flowbite-vue";
 import { useToast } from "vue-toastification";
 
@@ -97,9 +99,9 @@ const closeModal = () => {
           placeholder="Enter Title"
           label="Title"
         />
-        <fwb-input
+        <fwb-select
           v-model="editGameForm.genre"
-          placeholder="Enter Genre"
+          :options="options"
           label="Genre"
         />
         <fwb-checkbox v-model="editGameForm.played" label="Played?" />
