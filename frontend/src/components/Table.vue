@@ -1,12 +1,42 @@
 <script setup>
-import { computed } from "vue";
+import { computed, ref, reactive } from "vue";
 import { useStore } from "vuex";
 
 const store = useStore();
-
 const games = computed(() => store.getters.allGames);
+const updateGame = (editGameForm) => {
+  store.dispatch("updateGame", editGameForm);
+};
+const deleteGame = (game) => {
+  store.dispatch("deleteGame", game.id);
+};
 
-const emit = defineEmits(["showEditModal", "deleteGame"]);
+const open = ref(false);
+const editGameForm = reactive({
+  id: "",
+  title: "",
+  genre: "",
+  played: false,
+});
+
+const showEditModal = (game) => {
+  open.value = true;
+  editGameForm.id = game.id;
+  editGameForm.title = game.title;
+  editGameForm.genre = game.genre;
+  editGameForm.played = game.played;
+};
+
+const handleOk = (e) => {
+  e.preventDefault();
+  updateGame(editGameForm);
+  open.value = false;
+};
+
+const handleReset = (e) => {
+  e.preventDefault();
+  open.value = false;
+};
 </script>
 
 <template>
@@ -34,14 +64,14 @@ const emit = defineEmits(["showEditModal", "deleteGame"]);
             <button
               type="button"
               class="btn btn-info btn-sm"
-              @click="emit('showEditModal', game)"
+              @click="showEditModal(game)"
             >
               Update
             </button>
             <button
               type="button"
               class="btn btn-danger btn-sm"
-              @click="emit('deleteGame', game)"
+              @click="deleteGame(game)"
             >
               Delete
             </button>
@@ -50,4 +80,35 @@ const emit = defineEmits(["showEditModal", "deleteGame"]);
       </tr>
     </tbody>
   </table>
+
+  <a-modal
+    v-model:open="open"
+    title="Update Game"
+    okText="Update"
+    cancelText="Cancel"
+    @cancel="handleReset"
+    @ok="handleOk"
+  >
+    <a-form layout="vertical" :model="editGameForm" autocomplete="off">
+      <a-form-item
+        label="Title"
+        name="title"
+        :rules="[{ required: true, message: 'Please input your title!' }]"
+      >
+        <a-input v-model:value="editGameForm.title" placeholder="Enter Title" />
+      </a-form-item>
+
+      <a-form-item
+        label="Genre"
+        name="genre"
+        :rules="[{ required: true, message: 'Please input your genre!' }]"
+      >
+        <a-input v-model:value="editGameForm.genre" placeholder="Enter Genre" />
+      </a-form-item>
+
+      <a-form-item name="remember">
+        <a-checkbox v-model:checked="editGameForm.played">Played?</a-checkbox>
+      </a-form-item>
+    </a-form>
+  </a-modal>
 </template>

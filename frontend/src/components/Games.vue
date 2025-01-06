@@ -2,7 +2,6 @@
 import { ref, onMounted, reactive, computed } from "vue";
 import Table from "./Table.vue";
 import NewModal from "./NewModal.vue";
-import EditModal from "./EditModal.vue";
 import { useStore } from "vuex";
 
 const store = useStore();
@@ -10,38 +9,10 @@ const store = useStore();
 const message = computed(() => store.state.games.message);
 const showMessage = computed(() => store.state.games.showMessage);
 
-const addGame = (addGameForm) => {
-  store.dispatch("addGame", addGameForm);
-};
-
-const updateGame = (editGameForm) => {
-  store.dispatch("updateGame", editGameForm);
-};
-
-const deleteGame = (game) => {
-  store.dispatch("deleteGame", game.id);
-};
-
 const openAdd = ref(false);
-const openUpdate = ref(false);
-
-const formData = reactive({
-  id: "",
-  title: "",
-  genre: "",
-  played: false,
-});
 
 const showAddModal = () => {
   openAdd.value = true;
-};
-
-const showEditModal = (game) => {
-  openUpdate.value = true;
-  formData.id = game.id;
-  formData.title = game.title;
-  formData.genre = game.genre;
-  formData.played = game.played;
 };
 
 const hideAlert = () => {
@@ -91,24 +62,17 @@ onMounted(() => {
             Add Game
           </button>
           <br /><br />
-          <Table @show-edit-modal="showEditModal" @delete-game="deleteGame" />
+          <Table />
           <footer
             class="bg-primary text-white text-center"
             style="border-radius: 10px"
           >
-            Copyright &copy;. All Rights Reserved 2021
+            Copyright &copy;. All Rights Reserved 2025
           </footer>
         </div>
       </div>
       <!-- First Modal -->
-      <NewModal v-model="openAdd" @add-game="addGame" />
-
-      <!-- Second Modal -->
-      <EditModal
-        v-model="openUpdate"
-        :form-data="formData"
-        @update-game="updateGame"
-      />
+      <NewModal v-model="openAdd" />
     </div>
   </div>
 </template>

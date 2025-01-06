@@ -1,10 +1,16 @@
 <script setup>
 import { ref, defineProps, defineEmits, reactive } from "vue";
+import { useStore } from "vuex";
 defineProps({
   modelValue: Boolean,
 });
 
-const emit = defineEmits(["update:modelValue", "addGame"]);
+const emit = defineEmits(["update:modelValue"]);
+
+const store = useStore();
+const addGame = (addGameForm) => {
+  store.dispatch("addGame", addGameForm);
+};
 
 const addGameForm = reactive({
   title: "",
@@ -21,7 +27,7 @@ const initForm = () => {
 const handleOk = (e) => {
   e.preventDefault();
   emit("update:modelValue", false);
-  emit("addGame", addGameForm);
+  addGame(addGameForm);
   initForm();
 };
 
