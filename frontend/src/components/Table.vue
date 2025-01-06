@@ -2,7 +2,6 @@
 import { computed, ref, reactive } from "vue";
 import { useStore } from "vuex";
 import {
-  FwbA,
   FwbTable,
   FwbTableBody,
   FwbTableCell,
@@ -10,18 +9,26 @@ import {
   FwbTableHeadCell,
   FwbTableRow,
   FwbButton,
+  FwbModal,
+  FwbInput,
+  FwbCheckbox,
 } from "flowbite-vue";
+import { useToast } from "vue-toastification";
+
+const toast = useToast();
 
 const store = useStore();
 const games = computed(() => store.getters.allGames);
 const updateGame = (editGameForm) => {
   store.dispatch("updateGame", editGameForm);
+  toast.success("Game updated");
 };
 const deleteGame = (game) => {
   store.dispatch("deleteGame", game.id);
+  toast.success("Game deleted");
 };
 
-const open = ref(false);
+const isShowModal = ref(false);
 const editGameForm = reactive({
   id: "",
   title: "",
@@ -30,22 +37,20 @@ const editGameForm = reactive({
 });
 
 const showEditModal = (game) => {
-  open.value = true;
+  isShowModal.value = true;
   editGameForm.id = game.id;
   editGameForm.title = game.title;
   editGameForm.genre = game.genre;
   editGameForm.played = game.played;
 };
 
-const handleOk = (e) => {
-  e.preventDefault();
+const handleOk = () => {
   updateGame(editGameForm);
-  open.value = false;
+  isShowModal.value = false;
 };
 
-const handleReset = (e) => {
-  e.preventDefault();
-  open.value = false;
+const closeModal = () => {
+  isShowModal.value = false;
 };
 </script>
 
@@ -81,34 +86,32 @@ const handleReset = (e) => {
     </fwb-table-body>
   </fwb-table>
 
-  <a-modal
-    v-model:open="open"
-    title="Update Game"
-    okText="Update"
-    cancelText="Cancel"
-    @cancel="handleReset"
-    @ok="handleOk"
-  >
-    <a-form layout="vertical" :model="editGameForm" autocomplete="off">
-      <a-form-item
-        label="Title"
-        name="title"
-        :rules="[{ required: true, message: 'Please input your title!' }]"
-      >
-        <a-input v-model:value="editGameForm.title" placeholder="Enter Title" />
-      </a-form-item>
-
-      <a-form-item
-        label="Genre"
-        name="genre"
-        :rules="[{ required: true, message: 'Please input your genre!' }]"
-      >
-        <a-input v-model:value="editGameForm.genre" placeholder="Enter Genre" />
-      </a-form-item>
-
-      <a-form-item name="remember">
-        <a-checkbox v-model:checked="editGameForm.played">Played?</a-checkbox>
-      </a-form-item>
-    </a-form>
-  </a-modal>
+  <fwb-modal v-if="isShowModal" @close="closeModal">
+    <template #header>
+      <div class="flex items-center text-lg">Update Game</div>
+    </template>
+    <template #body>
+      <div class="flex flex-col gap-4">
+        <fwb-input
+          v-model="editGameForm.title"
+          placeholder="Enter Title"
+          label="Title"
+        />
+        <fwb-input
+          v-model="editGameForm.genre"
+          placeholder="Enter Genre"
+          label="Genre"
+        />
+        <fwb-checkbox v-model="editGameForm.played" label="Played?" />
+      </div>
+    </template>
+    <template #footer>
+      <div class="flex justify-end gap-2">
+        <fwb-button @click="closeModal" color="alternative">
+          Cancel
+        </fwb-button>
+        <fwb-button @click="handleOk"> Update </fwb-button>
+      </div>
+    </template>
+  </fwb-modal>
 </template>

@@ -1,15 +1,20 @@
 <script setup>
-import { ref, defineProps, defineEmits, reactive } from "vue";
+import { defineProps, defineEmits, reactive } from "vue";
 import { useStore } from "vuex";
+import { useToast } from "vue-toastification";
+import { FwbButton, FwbModal, FwbInput, FwbCheckbox } from "flowbite-vue";
 defineProps({
   modelValue: Boolean,
 });
+
+const toast = useToast();
 
 const emit = defineEmits(["update:modelValue"]);
 
 const store = useStore();
 const addGame = (addGameForm) => {
   store.dispatch("addGame", addGameForm);
+  toast.success("Game added");
 };
 
 const addGameForm = reactive({
@@ -24,49 +29,45 @@ const initForm = () => {
   addGameForm.played = false;
 };
 
-const handleOk = (e) => {
-  e.preventDefault();
+const handleOk = () => {
   emit("update:modelValue", false);
   addGame(addGameForm);
   initForm();
 };
 
-const handleReset = (e) => {
-  e.preventDefault();
+const closeModal = () => {
   emit("update:modelValue", false);
   initForm();
 };
 </script>
 
 <template>
-  <a-modal
-    :open="modelValue"
-    title="Add a new game"
-    okText="Submit"
-    cancelText="Reset"
-    @cancel="handleReset"
-    @ok="handleOk"
-  >
-    <a-form layout="vertical" :model="addGameForm" autocomplete="off">
-      <a-form-item
-        label="Title"
-        name="title"
-        :rules="[{ required: true, message: 'Please input your title!' }]"
-      >
-        <a-input v-model:value="addGameForm.title" placeholder="Enter Title" />
-      </a-form-item>
-
-      <a-form-item
-        label="Genre"
-        name="genre"
-        :rules="[{ required: true, message: 'Please input your genre!' }]"
-      >
-        <a-input v-model:value="addGameForm.genre" placeholder="Enter Genre" />
-      </a-form-item>
-
-      <a-form-item name="remember">
-        <a-checkbox v-model:checked="addGameForm.played">Played?</a-checkbox>
-      </a-form-item>
-    </a-form>
-  </a-modal>
+  <fwb-modal v-if="modelValue" @close="closeModal">
+    <template #header>
+      <div class="flex items-center text-lg">Add a new game</div>
+    </template>
+    <template #body>
+      <div class="flex flex-col gap-4">
+        <fwb-input
+          v-model="addGameForm.title"
+          placeholder="Enter Title"
+          label="Title"
+        />
+        <fwb-input
+          v-model="addGameForm.genre"
+          placeholder="Enter Genre"
+          label="Genre"
+        />
+        <fwb-checkbox v-model="addGameForm.played" label="Played?" />
+      </div>
+    </template>
+    <template #footer>
+      <div class="flex justify-end gap-2">
+        <fwb-button @click="closeModal" color="alternative">
+          Cancel
+        </fwb-button>
+        <fwb-button @click="handleOk"> Submit </fwb-button>
+      </div>
+    </template>
+  </fwb-modal>
 </template>
