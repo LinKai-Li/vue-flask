@@ -2,6 +2,7 @@ import axios from "axios";
 
 const state = {
   games: [],
+  stat: {},
 };
 
 const getters = {
@@ -13,6 +14,15 @@ const actions = {
     try {
       const response = await axios.get("http://localhost:8000/games");
       commit("setGames", response.data.games);
+    } catch (error) {
+      console.error(error);
+    }
+  },
+
+  async getStat({ commit }) {
+    try {
+      const response = await axios.get("http://localhost:8000/games/stats");
+      commit("setStat", response.data);
     } catch (error) {
       console.error(error);
     }
@@ -60,6 +70,7 @@ const mutations = {
       state.games.splice(index, 1, updGame);
     }
   },
+  setStat: (state, stat) => (state.stat = stat),
 };
 
 export default {

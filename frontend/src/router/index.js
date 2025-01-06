@@ -1,21 +1,21 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import Shark from '@/components/Shark.vue'
-import Games from '@/components/Games.vue'
+import { createRouter, createWebHistory } from "vue-router";
+import Statistic from "@/views/StatisticView.vue";
+import Games from "@/views/GamesView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/shark',
-      name: 'Shark',
-      component: Shark,
+      path: "/statistic",
+      name: "Statistic",
+      component: Statistic,
     },
     {
-      path: '/games',
-      name: 'Games',
+      path: "/games",
+      name: "Games",
       component: Games,
     },
   ],
-})
+});
 
-export default router
+export default router;
