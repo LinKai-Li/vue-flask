@@ -25,15 +25,6 @@ class Game(db.Model):
 with app.app_context():
     db.create_all()
 
-# hello world route
-@app.route('/', methods=['GET'])
-def greetings():
-    return("Hello, world!")
-
-@app.route('/shark', methods=['GET'])
-def shark():
-    return("Shark!")
-
 # The GET and POST route handler
 @app.route('/games', methods=['GET', 'POST'])
 def all_games():
@@ -97,6 +88,19 @@ def single_game(game_id):
         else:
             response_object['status'] = 'failure'
             response_object['message'] = 'Game not found!'
+    return jsonify(response_object)
+
+@app.route('/games/stats', methods=['GET'])
+def game_stats():
+    total_games = Game.query.count()
+    played_true_count = Game.query.filter_by(played=True).count()
+    played_false_count = Game.query.filter_by(played=False).count()
+
+    response_object = {
+        'total_games': total_games,
+        'played_true_count': played_true_count,
+        'played_false_count': played_false_count
+    }
     return jsonify(response_object)
 
 if __name__ == '__main__':
