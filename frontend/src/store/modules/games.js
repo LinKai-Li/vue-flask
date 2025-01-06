@@ -2,8 +2,6 @@ import axios from "axios";
 
 const state = {
   games: [],
-  message: "",
-  showMessage: false,
 };
 
 const getters = {
@@ -24,7 +22,6 @@ const actions = {
     try {
       const response = await axios.post("http://localhost:8000/games", game);
       commit("newGame", response.data.game);
-      commit("setMessage", "Game added successfully");
     } catch (error) {
       console.error(error);
     }
@@ -37,7 +34,6 @@ const actions = {
         updatedGame,
       );
       commit("updateGame", response.data.game);
-      commit("setMessage", "Game updated successfully");
     } catch (error) {
       console.error(error);
     }
@@ -47,7 +43,6 @@ const actions = {
     try {
       await axios.delete(`http://localhost:8000/games/${id}`);
       commit("removeGame", id);
-      commit("setMessage", "Game deleted successfully");
     } catch (error) {
       console.error(error);
     }
@@ -65,14 +60,6 @@ const mutations = {
       state.games.splice(index, 1, updGame);
     }
   },
-  setMessage: (state, message) => {
-    state.message = message;
-    state.showMessage = true;
-    setTimeout(() => {
-      state.showMessage = false;
-    }, 3000);
-  },
-  hideAlert: (state) => (state.showMessage = false),
 };
 
 export default {

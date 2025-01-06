@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, reactive, computed } from "vue";
+import { ref, onMounted } from "vue";
 import { FwbButton } from "flowbite-vue";
 
 import Table from "./Table.vue";
@@ -8,17 +8,10 @@ import { useStore } from "vuex";
 
 const store = useStore();
 
-const message = computed(() => store.state.games.message);
-const showMessage = computed(() => store.state.games.showMessage);
-
 const openAdd = ref(false);
 
 const showAddModal = () => {
   openAdd.value = true;
-};
-
-const hideAlert = () => {
-  store.dispatch("hideAlert");
 };
 
 onMounted(() => {
@@ -45,14 +38,6 @@ onMounted(() => {
         </div>
       </div>
     </section>
-    <!-- Alert Message -->
-    <a-alert
-      v-if="showMessage"
-      :message="message"
-      type="warning"
-      closable
-      @close="hideAlert"
-    />
 
     <Table />
     <footer
